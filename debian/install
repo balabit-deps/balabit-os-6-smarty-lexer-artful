@@ -1,0 +1,3 @@
+*.php usr/share/php/smarty-lexer/
+LexerGenerator/ usr/share/php/smarty-lexer/
+ParserGenerator/ usr/share/php/smarty-lexer/

@@ -1,0 +1,32 @@
+From 54c249cf7da0dbf9b3d7581d1b6a9e1da8e73f3f Mon Sep 17 00:00:00 2001
+From: uwetews <uwe.tews@googlemail.com>
+Date: Mon, 7 Nov 2016 03:01:34 +0100
+Subject: [PATCH] optimize lexer code for speed 
+ https://github.com/smarty-php/smarty/issues/311
+
+---
+ LexerGenerator/Parser.php | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/LexerGenerator/Parser.php b/LexerGenerator/Parser.php
+index dce414b..6728ebe 100644
+--- a/LexerGenerator/Parser.php
++++ b/LexerGenerator/Parser.php
+@@ -362,8 +362,12 @@ class PHP_LexerGenerator_Parser#line 171 "Parser.php"
+             if (preg_match($this->yy_global_pattern' . $ruleindex . ',' . $this->input . ', $yymatches, null, ' .
+              $this->counter .
+                     ')) {
+-                 $yymatches = array_filter($yymatches);
+-                 if (empty($yymatches)) {
++                if (!isset($yymatches[ 0 ][1])) {
++                   $yymatches = preg_grep("/(.|\s)+/", $yymatches);
++                } else {
++                    $yymatches = array_filter($yymatches);
++                }
++                if (empty($yymatches)) {
+                     throw new Exception(\'Error: lexing failed because a rule matched\' .
+                         \' an empty string.  Input "\' . substr(' . $this->input . ',
+                         ' . $this->counter . ', 5) . \'... state ' . $statename . '\');
+-- 
+2.1.4
+

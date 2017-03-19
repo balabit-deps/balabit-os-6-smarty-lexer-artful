@@ -1,0 +1,194 @@
+Description: Make smarty-lexer usable when building smarty3 for Debian
+Author: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+Abstract:
+ (1) Re-define relative paths within smarty3 src:package.
+ (2) Include smarty-lexer .php files properly from /usr/share/php/.
+
+--- a/Create_Config_Parser.php
++++ b/Create_Config_Parser.php
+@@ -1,6 +1,6 @@
+ <?php
+-$smartyPath = '../smarty/libs/sysplugins/';
+-$lexerPath = '../smarty/lexer/';
++$smartyPath = './libs/sysplugins/';
++$lexerPath = './lexer/';
+ if (!is_dir($lexerPath)) {
+     echo '<br><br>Fatal error: Missing lexer / parser definition folder \'lexer\' in distribution <br>';
+     exit(1);
+@@ -9,12 +9,12 @@
+ copy("{$smartyPath}smarty_internal_configfileparser.php", "{$lexerPath}smarty_internal_configfileparser.php.bak");
+ 
+ // Create Lexer
+-require_once './LexerGenerator.php';
++require_once 'smarty-lexer/LexerGenerator.php';
+ $lex = new PHP_LexerGenerator("{$lexerPath}smarty_internal_configfilelexer.plex");
+ unset($lex);
+ 
+ // Create Parser
+-require_once './ParserGenerator.php';
++require_once 'smarty-lexer/ParserGenerator.php';
+ $parser = new PHP_ParserGenerator();
+ $parser->main("{$lexerPath}smarty_internal_configfileparser.y");
+ unset($parser);
+--- a/Create_Template_Parser.php
++++ b/Create_Template_Parser.php
+@@ -2,8 +2,8 @@
+ ini_set('max_execution_time',300);
+ ini_set('xdebug.max_nesting_level',300);
+ 
+-$smartyPath = '../smarty/libs/sysplugins/';
+-$lexerPath = '../smarty/lexer/';
++$smartyPath = './libs/sysplugins/';
++$lexerPath = './lexer/';
+ if (!is_dir($lexerPath)) {
+     echo '<br><br>Fatal error: Missing lexer / parser definition folder \'lexer\' in distribution <br>';
+     exit(1);
+@@ -12,7 +12,7 @@
+ copy("{$smartyPath}smarty_internal_templatelexer.php", "{$lexerPath}smarty_internal_templatelexer.php.bak");
+ copy("{$smartyPath}smarty_internal_templateparser.php", "{$lexerPath}smarty_internal_templateparser.php.bak");
+ // Create Lexer
+-require_once './LexerGenerator.php';
++require_once 'smarty-lexer/LexerGenerator.php';
+ $lex = new PHP_LexerGenerator("{$lexerPath}smarty_internal_templatelexer.plex");
+ unset($lex);
+ 
+@@ -21,7 +21,7 @@
+ file_put_contents("{$lexerPath}smarty_internal_templatelexer.php", $content);
+ 
+ // Create Parser
+-require_once './ParserGenerator.php';
++require_once 'smarty-lexer/ParserGenerator.php';
+ $parser = new PHP_ParserGenerator();
+ $parser->main("{$lexerPath}smarty_internal_templateparser.y");
+ unset($parser);
+--- a/LexerGenerator.php
++++ b/LexerGenerator.php
+@@ -48,11 +48,11 @@
+ /**
+  * The Lexer generation parser
+  */
+-require_once './LexerGenerator/Parser.php';
++require_once 'smarty-lexer/LexerGenerator/Parser.php';
+ /**
+  * Hand-written lexer for lex2php format files
+  */
+-require_once './LexerGenerator/Lexer.php';
++require_once 'smarty-lexer/LexerGenerator/Lexer.php';
+ 
+ /**
+  * The basic home class for the lexer generator.  A lexer scans text and
+--- a/LexerGenerator/Exception.php
++++ b/LexerGenerator/Exception.php
+@@ -42,7 +42,7 @@
+  * @copyright  2006 Gregory Beaver
+  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
+  */
+-require_once './Exception.php';
++require_once 'smarty-lexer/Exception.php';
+ /**
+  * @package    PHP_LexerGenerator
+  * @author     Gregory Beaver <cellog@php.net>
+--- a/LexerGenerator/Lexer.php
++++ b/LexerGenerator/Lexer.php
+@@ -21,7 +21,7 @@
+  * @version    CVS: $Id: Lexer.php 246683 2007-11-22 04:43:52Z instance $
+  * @since      File available since Release 0.1.0
+  */
+-require_once './LexerGenerator/Parser.php';
++require_once 'smarty-lexer/LexerGenerator/Parser.php';
+ /**
+  * Token scanner for plex files.
+  *
+--- a/LexerGenerator/Parser.php
++++ b/LexerGenerator/Parser.php
+@@ -147,9 +147,9 @@
+ /**
+  * For regular expression validation
+  */
+-require_once './LexerGenerator/Regex/Lexer.php';
+-require_once './LexerGenerator/Regex/Parser.php';
+-require_once './LexerGenerator/Exception.php';
++require_once 'smarty-lexer/LexerGenerator/Regex/Lexer.php';
++require_once 'smarty-lexer/LexerGenerator/Regex/Parser.php';
++require_once 'smarty-lexer/LexerGenerator/Exception.php';
+ /**
+  * Token parser for plex files.
+  *
+--- a/LexerGenerator/ParserOriginal.php
++++ b/LexerGenerator/ParserOriginal.php
+@@ -147,9 +147,9 @@
+ /**
+  * For regular expression validation
+  */
+-require_once './LexerGenerator/Regex/Lexer.php';
+-require_once './LexerGenerator/Regex/Parser.php';
+-require_once './LexerGenerator/Exception.php';
++require_once 'smarty-lexer/LexerGenerator/Regex/Lexer.php';
++require_once 'smarty-lexer/LexerGenerator/Regex/Parser.php';
++require_once 'smarty-lexer/LexerGenerator/Exception.php';
+ /**
+  * Token parser for plex files.
+  *
+--- a/LexerGenerator/Regex/Lexer.php
++++ b/LexerGenerator/Regex/Lexer.php
+@@ -1,5 +1,5 @@
+ <?php
+-require_once './LexerGenerator/Regex/Parser.php';
++require_once 'smarty-lexer/LexerGenerator/Regex/Parser.php';
+ class PHP_LexerGenerator_Regex_Lexer
+ {
+     const MATCHSTART = PHP_LexerGenerator_Regex_Parser::MATCHSTART;
+--- a/LexerGenerator/Regex/Parser.php
++++ b/LexerGenerator/Regex/Parser.php
+@@ -97,7 +97,7 @@
+ // code external to the class is included here
+ #line 2 "Parser.y"
+ 
+-require_once './LexerGenerator/Exception.php';
++require_once 'smarty-lexer/LexerGenerator/Exception.php';
+ #line 102 "Parser.php"
+ 
+ // declare_class is output here
+--- a/LexerGenerator/cli.php
++++ b/LexerGenerator/cli.php
+@@ -1,3 +1,3 @@
+ <?php
+-require_once './LexerGenerator.php';
++require_once 'smarty-lexer/LexerGenerator.php';
+ $a = new PHP_LexerGenerator($_SERVER['argv'][1]);
+--- a/ParserGenerator.php
++++ b/ParserGenerator.php
+@@ -65,15 +65,15 @@
+ /**#@+
+  * Basic components of the parser generator
+  */
+-require_once './ParserGenerator/Action.php';
+-require_once './ParserGenerator/ActionTable.php';
+-require_once './ParserGenerator/Config.php';
+-require_once './ParserGenerator/Data.php';
+-require_once './ParserGenerator/Symbol.php';
+-require_once './ParserGenerator/Rule.php';
+-require_once './ParserGenerator/Parser.php';
+-require_once './ParserGenerator/PropagationLink.php';
+-require_once './ParserGenerator/State.php';
++require_once 'smarty-lexer/ParserGenerator/Action.php';
++require_once 'smarty-lexer/ParserGenerator/ActionTable.php';
++require_once 'smarty-lexer/ParserGenerator/Config.php';
++require_once 'smarty-lexer/ParserGenerator/Data.php';
++require_once 'smarty-lexer/ParserGenerator/Symbol.php';
++require_once 'smarty-lexer/ParserGenerator/Rule.php';
++require_once 'smarty-lexer/ParserGenerator/Parser.php';
++require_once 'smarty-lexer/ParserGenerator/PropagationLink.php';
++require_once 'smarty-lexer/ParserGenerator/State.php';
+ /**#@-*/
+ /**
+  * The basic home class for the parser generator
+--- a/ParserGenerator/cli.php
++++ b/ParserGenerator/cli.php
+@@ -1,5 +1,5 @@
+ <?php
+-require_once './ParserGenerator.php';
++require_once 'smarty-lexer/ParserGenerator.php';
+ ini_set('max_execution_time',300);
+ ini_set('xdebug.max_nesting_level',300);
+ $me = new PHP_ParserGenerator;

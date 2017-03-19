@@ -1,0 +1,6 @@
+version=3
+opts=\
+dversionmangle=s/\+dfsg1//,\
+filenamemangle=s/.*\/v?([\d\.-]+)\.tar\.gz/smarty-lexer-$1.tar.gz/ \
+https://github.com/smarty-php/smarty-lexer/tags .*/archive/v?([\d\.]+).tar.gz
+

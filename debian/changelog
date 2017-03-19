@@ -1,0 +1,46 @@
+smarty-lexer (3.1.30+dfsg1-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Apply upstream commits 54c249cf and ccaeeca3 to fix broken lexer breaking
+    the template generator. (Closes: #847571)
+    Thanks to Mike Gabriel for pointing out the upstream commits and equally
+    thanks to Wolfgang Schweer and Tomasz Rybak for confirming the fix works.
+
+ -- Holger Levsen <holger@debian.org>  Sun, 19 Mar 2017 14:57:26 +0000
+
+smarty-lexer (3.1.30+dfsg1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/control:
+    - Add Debian Edu Pkg Team to Uploaders: field.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Fri, 25 Nov 2016 19:47:13 +0100
+
+smarty-lexer (3.1.28+dfsg1-1) unstable; urgency=medium
+
+  * Repack upstream tarball due to mal-licensed file (Exception.php, PHP 3.0
+    licensed).
+  * debian/control:
+    + Add D (smarty-lexer): php-pear. We will use Exception.php from php-pear
+      instead of the bundled (old and PHP 3.0 licensed) Exception.php.
+    + Bump Standards: to 3.9.8. No changes needed.
+  * debian/{rules,watch}:
+    + Turn src:package into +dfsg1 package. The upstream sources contains one
+      file (Exception.php) not appropriately licensed for Debian (PHP 3.0
+      instead of PHP 3.01).
+  * debian/links:
+    + Place symlink Exception.php into /usr/share/php/smarty-lexert, pointing
+      to the same file from php-pear bin:package.
+  * debian/patches:
+    + Add 2001_make-it-usable-for-smarty3.patch. Make smarty-lexer usable when
+      building smarty3 (which is its only purpose in Debian).
+  * debian/copyright:
+    + Drop Exception.php. Removed from upstream source tree.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 30 May 2016 12:29:40 +0200
+
+smarty-lexer (3.1.28-1) unstable; urgency=medium
+
+  * Initial release. (Closes: #824354).
+
+ -- Mike Gabriel <sunweaver@debian.org>  Sat, 14 May 2016 22:42:35 +0200
